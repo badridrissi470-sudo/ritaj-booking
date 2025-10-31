@@ -11,6 +11,13 @@ function generateTimeSlots() {
   return slots
 }
 
+// Normalise le format d'heure (enlève les secondes si présentes)
+function normalizeTime(time) {
+  if (!time) return time
+  // Si le format est "14:00:00", on garde juste "14:00"
+  return time.substring(0, 5)
+}
+
 export async function GET(request) {
   const { searchParams } = new URL(request.url)
   const date = searchParams.get('date')
@@ -31,7 +38,8 @@ export async function GET(request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
-  const bookedSlots = reservations.map(r => r.start_time)
+  // Normalise les heures des réservations
+  const bookedSlots = reservations.map(r => normalizeTime(r.start_time))
 
   const allSlots = generateTimeSlots().map(slot => ({
     time: slot,
