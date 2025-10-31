@@ -157,7 +157,7 @@ export default function ReserverPage() {
                     className={`py-3 px-4 rounded font-bold transition ${
                       slot.available
                         ? 'bg-green-100 hover:bg-green-200 text-green-800 cursor-pointer'
-                        : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                        : 'bg-gray-400 text-gray-700 cursor-not-allowed opacity-50'
                     } ${selectedSlot === slot.time ? 'ring-2 ring-green-600' : ''}`}
                   >
                     {slot.time}
