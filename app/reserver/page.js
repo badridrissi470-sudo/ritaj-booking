@@ -21,7 +21,6 @@ export default function ReserverPage() {
 
   // Récupère les terrains au chargement
   useEffect(() => {
-    // Pour l'instant on met les terrains en dur (ou tu peux créer une API)
     setPitches([
       { id: '54d5ba10-9122-4bae-a6cf-c2044dc413e7', name: 'Terrain Gauche' },
       { id: '9cab2012-f6da-433e-9df3-0b6b964e8813', name: 'Terrain Droit' }
@@ -41,6 +40,8 @@ export default function ReserverPage() {
 
   const fetchAvailability = async () => {
     setLoading(true)
+    setSelectedSlot('')
+    setShowForm(false)
     try {
       const res = await fetch(`/api/availability?pitchId=${selectedPitch}&date=${selectedDate}`)
       const data = await res.json()
@@ -85,7 +86,7 @@ export default function ReserverPage() {
         setSuccess(true)
         setShowForm(false)
         setFormData({ customerName: '', phone: '', playersCount: '' })
-        fetchAvailability() // Rafraîchit les créneaux
+        fetchAvailability()
       } else {
         setError(data.error || 'Une erreur est survenue')
       }
@@ -113,11 +114,11 @@ export default function ReserverPage() {
           <div className="grid md:grid-cols-2 gap-4 mb-4">
             {/* Sélection terrain */}
             <div>
-              <label className="block text-sm font-bold mb-2">Terrain</label>
+              <label className="block text-sm font-bold mb-2 text-black">Terrain</label>
               <select
                 value={selectedPitch}
                 onChange={(e) => setSelectedPitch(e.target.value)}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-2 text-black"
               >
                 <option value="">Choisir un terrain</option>
                 {pitches.map(p => (
@@ -128,13 +129,13 @@ export default function ReserverPage() {
 
             {/* Sélection date */}
             <div>
-              <label className="block text-sm font-bold mb-2">Date</label>
+              <label className="block text-sm font-bold mb-2 text-black">Date</label>
               <input
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
                 min={new Date().toISOString().split('T')[0]}
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-3 py-2 text-black"
               />
             </div>
           </div>
@@ -143,9 +144,9 @@ export default function ReserverPage() {
         {/* Grille des créneaux */}
         {selectedPitch && selectedDate && (
           <div className="bg-white rounded-lg shadow p-6 mb-6">
-            <h2 className="text-xl font-bold mb-4">Créneaux disponibles</h2>
+            <h2 className="text-xl font-bold mb-4 text-black">Créneaux disponibles</h2>
             {loading ? (
-              <p className="text-center py-8 text-gray-500">Chargement...</p>
+              <p className="text-center py-8 text-black">Chargement...</p>
             ) : (
               <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
                 {slots.map(slot => (
@@ -170,41 +171,41 @@ export default function ReserverPage() {
         {/* Formulaire */}
         {showForm && (
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-bold mb-4">Vos informations</h2>
+            <h2 className="text-xl font-bold mb-4 text-black">Vos informations</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-bold mb-2">Nom complet *</label>
+                <label className="block text-sm font-bold mb-2 text-black">Nom complet *</label>
                 <input
                   type="text"
                   required
                   value={formData.customerName}
                   onChange={(e) => setFormData({...formData, customerName: e.target.value})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border rounded px-3 py-2 text-black"
                   placeholder="Votre nom"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold mb-2">Téléphone *</label>
+                <label className="block text-sm font-bold mb-2 text-black">Téléphone *</label>
                 <input
                   type="tel"
                   required
                   value={formData.phone}
                   onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border rounded px-3 py-2 text-black"
                   placeholder="+33 6 12 34 56 78"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold mb-2">Nombre de joueurs (optionnel)</label>
+                <label className="block text-sm font-bold mb-2 text-black">Nombre de joueurs (optionnel)</label>
                 <input
                   type="number"
                   min="1"
                   max="20"
                   value={formData.playersCount}
                   onChange={(e) => setFormData({...formData, playersCount: e.target.value})}
-                  className="w-full border rounded px-3 py-2"
+                  className="w-full border rounded px-3 py-2 text-black"
                   placeholder="Ex: 10"
                 />
               </div>
