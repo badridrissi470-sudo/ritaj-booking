@@ -18,6 +18,7 @@ export default function ReserverPage() {
   })
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [reservationDetails, setReservationDetails] = useState(null)
 
   // Récupère les terrains au chargement
   useEffect(() => {
@@ -61,6 +62,13 @@ export default function ReserverPage() {
     }
   }
 
+  // Fonction pour formater la date en français
+  const formatDate = (dateString) => {
+    const date = new Date(dateString + 'T00:00:00')
+    const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }
+    return date.toLocaleDateString('fr-FR', options)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -83,6 +91,14 @@ export default function ReserverPage() {
       const data = await res.json()
 
       if (res.ok) {
+        // Stocker les détails de la réservation
+        const pitchName = pitches.find(p => p.id === selectedPitch)?.name || 'Terrain'
+        setReservationDetails({
+          terrain: pitchName,
+          date: formatDate(selectedDate),
+          heure: selectedSlot
+        })
+        
         setSuccess(true)
         setShowForm(false)
         setFormData({ customerName: '', phone: '', playersCount: '' })
@@ -228,9 +244,16 @@ export default function ReserverPage() {
         )}
 
         {/* Message de succès */}
-        {success && (
+        {success && reservationDetails && (
           <div className="bg-green-100 border border-green-400 text-green-800 px-6 py-4 rounded-lg">
-            <h3 className="font-bold text-lg mb-2">✅ Réservation enregistrée !</h3>
+            <h3 className="font-bold text-lg mb-3">✅ Réservation enregistrée !</h3>
+            
+            <div className="mb-3 space-y-1">
+              <p><strong>📍 Terrain :</strong> {reservationDetails.terrain}</p>
+              <p><strong>📅 Date :</strong> {reservationDetails.date}</p>
+              <p><strong>🕐 Heure :</strong> {reservationDetails.heure}</p>
+            </div>
+            
             <p className="mb-2">Présentez-vous <strong>10 minutes avant l'heure</strong>.</p>
             <p className="mb-2"><strong>Paiement à la caisse.</strong></p>
             <p className="text-sm">Pour toute question : <strong>+33 7 45 59 76 46</strong></p>
